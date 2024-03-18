@@ -24,7 +24,11 @@ def convert_date(iso_string):
     Returns:
         A date formatted like: Weekday Date Month Year e.g. Tuesday 06 July 2021
     """
-    pass
+    # Check out the docs:
+    #   - https://docs.python.org/3/library/datetime.html#datetime.datetime.fromisoformat
+    #   - https://docs.python.org/3/library/datetime.html#datetime.datetime.strftime
+    #   - https://strftime.org/     <- handy cheatsheet for representing datetime string formats
+    return datetime.fromisoformat(iso_string).strftime("%A %d %B %Y")
 
 
 def convert_f_to_c(temp_in_farenheit):
@@ -35,7 +39,11 @@ def convert_f_to_c(temp_in_farenheit):
     Returns:
         A float representing a temperature in degrees celcius, rounded to 1dp.
     """
-    pass
+    temp_in_celcius = 5*(float(temp_in_farenheit)-32)/9
+    
+    # Check out the docs:
+    #   - https://docs.python.org/3/library/functions.html#round
+    return round(temp_in_celcius, 1)
 
 
 def calculate_mean(weather_data):
@@ -46,8 +54,20 @@ def calculate_mean(weather_data):
     Returns:
         A float representing the mean value.
     """
-    pass
+    # We use a list comprehension to convert any non-floats from the input to floats.
+    #   - https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
+    #   - handy examples here: https://www.youtube.com/watch?v=AhSvKGTh28Q 
 
+    data_points = [float(datapoint) for datapoint in weather_data]
+
+    # now we can calculate the average
+    return sum(data_points)/len(weather_data)
+
+# -----------------------------------------------------------------------------
+# It's possible to solve these next three in fewer lines with clever hacks.
+# If you did it that way, that's fine too.
+# I think the way I use here is quite readable, though, which is desirable.
+# -----------------------------------------------------------------------------
 
 def load_data_from_csv(csv_file):
     """Reads a csv file and stores the data in a list.
@@ -57,8 +77,45 @@ def load_data_from_csv(csv_file):
     Returns:
         A list of lists, where each sublist is a (non-empty) line in the csv file.
     """
-    pass
+        
+    data_to_return = []
 
+    # It's good practice to make sure that the file gets closed after we are done.
+    # Otherwise another function might not be able to access it later.
+    
+    # The "with" statement in Python lets you define a variable to 
+    # represent objects that need cleaning up when you're done. 
+    # Here's a good writeup: https://realpython.com/python-with-statement/
+    
+    with open(csv_file, 'r') as file:
+        my_reader = csv.reader(file, delimiter=',')
+        
+        # We want to throw the header away, so we pop it off with "next()"
+        # https://docs.python.org/3/library/functions.html#next
+
+        # This works because my_reader is an "iterator"
+        # (a special type of object that returns a list of values one-by-one)
+        #   - https://docs.python.org/3/glossary.html#term-iterator
+
+        header = next(my_reader)
+
+        # Now we can iterate over the rest of the file
+        for row in my_reader:
+
+            # In Python, the empty list "[]" evaluates to False!
+            if not row:
+                # If the list is empty, we skip it with "pass"
+                pass
+            
+            else:
+                # If the list is not empty, we convert the numbers to ints, 
+                # and add to our data to return
+
+                # Here I'm doing the conversion, creating a list, and appending 
+                # it, all in one go.
+                data_to_return.append([row[0], int(row[1]), int(row[2])])
+
+        return data_to_return
 
 def find_min(weather_data):
     """Calculates the minimum value in a list of numbers.
@@ -68,7 +125,34 @@ def find_min(weather_data):
     Returns:
         The minium value and it's position in the list. (In case of multiple matches, return the index of the *last* example in the list.)
     """
-    pass
+
+    # If we got no data, there is no minimum value or position to return
+    # In that case we return an empty tuple
+
+    if not weather_data:
+        return ()
+
+    # Now we need to create variables to store our results, but we have to make
+    # sure that they will be immediately replaced by the first item in the list
+
+    # Every index will come after "-1"!
+    min_index = -1
+
+    # Ever number is smaller than infinity!
+    min_value = float('inf')
+
+    # We use enumerate to get the index and value of each item in the list
+    #   - https://docs.python.org/3/library/functions.html#enumerate
+    for index, value in enumerate(weather_data):
+        value = float(value)
+        
+        # If the value is smaller than our current min, we replace it!
+        if value <= min_value:
+            min_index = index
+            min_value = value
+
+    # Finally, we can return the results.
+    return round(min_value, 1), min_index
 
 
 def find_max(weather_data):
@@ -79,8 +163,36 @@ def find_max(weather_data):
     Returns:
         The maximum value and it's position in the list. (In case of multiple matches, return the index of the *last* example in the list.)
     """
-    pass
 
+    # The logic for this function is exactly the same as find_min, except...
+    #   - we use "negative infinity" as our starting max_value
+    #   - we use greater-than-or-equal-to (">=") instead of less-than-or-equal-to ("<=")
+
+    if not weather_data:
+        return ()
+    
+    max_index = -1
+    max_value = -float('inf')
+
+    for index, value in enumerate(weather_data):
+        value = float(value)
+        if value >= max_value:
+            max_index = index
+            max_value = value
+
+    return round(max_value, 1), max_index
+
+
+# -----------------------------------------------------------------------------
+# It's possible to solve these next two a few different ways.
+#   - You could use "+" to concatenate strings 
+#   - You could use multi-line f-strings with triple quotes 
+#
+# I've chosen to add each line of the output to a list, and then use join()
+# to concatenate the lists together. This is a common idiom in Python, and
+# it keeps things easy to read. It's also very efficient for the computer.
+# (not that that matters in a program this simple!)
+# -----------------------------------------------------------------------------
 
 def generate_summary(weather_data):
     """Outputs a summary for the given weather data.
@@ -90,7 +202,46 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    pass
+
+    # We will generate a list of lines to store our output. 
+    result_list = []
+
+    # Three list comprehensions to convert our days and temps
+    # See how we grab the first element of each row for the dates,
+    # the second element of each row for the lows,
+    # and the third element of each row for the highs?
+    dates = [convert_date(day[0]) for day in weather_data]
+    lows = [convert_f_to_c(day[1]) for day in weather_data]
+    highs = [convert_f_to_c(day[2]) for day in weather_data]
+
+    # Using the functions we built earlier!
+    lowest, lowest_index = find_min(lows)
+    highest, highest_index = find_max(highs)
+
+    # We can get the lowest and highest days using the indices we just found
+    lowest_day = dates[lowest_index]
+    highest_day = dates[highest_index]
+
+    # Using the functions we built earlier!
+    # (Need to round to 1 decimal place!)
+    mean_low = round(calculate_mean(lows), 1)
+    mean_high = round(calculate_mean(highs), 1)
+
+    # Adding each line to our results
+    result_list.append(f"{len(weather_data)} Day Overview")
+    result_list.append(f"  The lowest temperature will be {lowest}°C, and will occur on {lowest_day}.")
+    result_list.append(f"  The highest temperature will be {highest}°C, and will occur on {highest_day}.")
+    result_list.append(f"  The average low this week is {mean_low}°C.")
+    result_list.append(f"  The average high this week is {mean_high}°C.")
+    # The test files end with an empty line!
+    result_list.append("")
+
+    # Here we use the string.join() method to concatenate.
+    # Each concatenated line is separated by a newline character.
+    #   - https://docs.python.org/3/library/stdtypes.html#str.join
+    #   - https://www.freecodecamp.org/news/print-newline-in-python/
+
+    return "\n".join(result_list)
 
 
 def generate_daily_summary(weather_data):
@@ -101,4 +252,20 @@ def generate_daily_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    pass
+    # We use the same list-building process as above
+    result_list = []
+
+    for day in weather_data:
+        result_list.append(f"---- {convert_date(day[0])} ----")
+        result_list.append(f"  Minimum Temperature: {convert_f_to_c(day[1])}°C")
+        result_list.append(f"  Maximum Temperature: {convert_f_to_c(day[2])}°C")
+        result_list.append("")
+
+    # The test files end with TWO empty lines!
+    result_list.append("")
+
+    return "\n".join(result_list)
+    
+    
+    
+
