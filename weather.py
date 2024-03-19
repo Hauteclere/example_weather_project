@@ -59,6 +59,7 @@ def calculate_mean(weather_data):
     # There's a short discussion of this in the README, but here are the docs:
     #   - https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
     #   - handy examples here: https://www.youtube.com/watch?v=AhSvKGTh28Q 
+    # You could just as easily use a "for" loop if you preferred.
 
     data_points = [float(datapoint) for datapoint in weather_data]
 
@@ -212,6 +213,8 @@ def generate_summary(weather_data):
     # See how we grab the first element of each row for the dates,
     # the second element of each row for the lows,
     # and the third element of each row for the highs?
+    # Once again, you could use a "for" loop if you preferred.
+
     dates = [convert_date(day[0]) for day in weather_data]
     lows = [convert_f_to_c(day[1]) for day in weather_data]
     highs = [convert_f_to_c(day[2]) for day in weather_data]
@@ -256,6 +259,9 @@ def generate_daily_summary(weather_data):
     # We use the same list-building process as above
     result_list = []
 
+    # I've chosen NOT to use a list comprehension this time,
+    # because this seems easier to read to me. But you could
+    # use a comprehension here too and get the same result!
     for day in weather_data:
         result_list.append(f"---- {convert_date(day[0])} ----")
         result_list.append(f"  Minimum Temperature: {convert_f_to_c(day[1])}°C")
