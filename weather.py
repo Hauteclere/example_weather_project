@@ -3,7 +3,6 @@ from datetime import datetime
 
 DEGREE_SYBMOL = u"\N{DEGREE SIGN}C"
 
-
 def format_temperature(temp):
     """Takes a temperature and returns it in string format with the degrees
         and celcius symbols.
@@ -28,6 +27,7 @@ def convert_date(iso_string):
     #   - https://docs.python.org/3/library/datetime.html#datetime.datetime.fromisoformat
     #   - https://docs.python.org/3/library/datetime.html#datetime.datetime.strftime
     #   - https://strftime.org/     <- handy cheatsheet for representing datetime string formats
+
     return datetime.fromisoformat(iso_string).strftime("%A %d %B %Y")
 
 
@@ -43,6 +43,7 @@ def convert_f_to_c(temp_in_farenheit):
     
     # Check out the docs:
     #   - https://docs.python.org/3/library/functions.html#round
+
     return round(temp_in_celcius, 1)
 
 
@@ -55,6 +56,7 @@ def calculate_mean(weather_data):
         A float representing the mean value.
     """
     # We use a list comprehension to convert any non-floats from the input to floats.
+    # There's a short discussion of this in the README, but here are the docs:
     #   - https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
     #   - handy examples here: https://www.youtube.com/watch?v=AhSvKGTh28Q 
 
@@ -102,17 +104,15 @@ def load_data_from_csv(csv_file):
         # Now we can iterate over the rest of the file
         for row in my_reader:
 
-            # In Python, the empty list "[]" evaluates to False!
-            if not row:
-                # If the list is empty, we skip it with "pass"
-                pass
-            
-            else:
+            # In Python, the empty list "[]" evaluates to False,
+            # and every other list evaluates to True!
+            if row:
                 # If the list is not empty, we convert the numbers to ints, 
                 # and add to our data to return
 
                 # Here I'm doing the conversion, creating a list, and appending 
-                # it, all in one go.
+                # it, all in one go. You could perform these steps separately 
+                # if you preferred.
                 data_to_return.append([row[0], int(row[1]), int(row[2])])
 
         return data_to_return
@@ -133,13 +133,15 @@ def find_min(weather_data):
         return ()
 
     # Now we need to create variables to store our results, but we have to make
-    # sure that they will be immediately replaced by the first item in the list
+    # sure that they will be immediately replaced by the first item in the list,
+    # no matter how high it is!
 
-    # Every index will come after "-1"!
+    # Since 0 is the lowest index, every index will come after "-1"!
     min_index = -1
 
-    # Ever number is smaller than infinity!
-    min_value = float('inf')
+    # It turns out we can create a float with a value of "infinity"
+    # This is handy, because every number is smaller than infinity!
+    min_value = float('infinity')
 
     # We use enumerate to get the index and value of each item in the list
     #   - https://docs.python.org/3/library/functions.html#enumerate
@@ -172,7 +174,7 @@ def find_max(weather_data):
         return ()
     
     max_index = -1
-    max_value = -float('inf')
+    max_value = -float('infinity')
 
     for index, value in enumerate(weather_data):
         value = float(value)
@@ -242,7 +244,6 @@ def generate_summary(weather_data):
     #   - https://www.freecodecamp.org/news/print-newline-in-python/
 
     return "\n".join(result_list)
-
 
 def generate_daily_summary(weather_data):
     """Outputs a daily summary for the given weather data.
