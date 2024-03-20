@@ -209,9 +209,6 @@ def generate_summary(weather_data):
     lows = []
     highs = []
 
-    # We will also generate a list of lines to store our output. 
-    result_list = []
-
     for day in weather_data:
         dates.append(convert_date(day[0]))
         lows.append(convert_f_to_c(day[1]))
@@ -230,14 +227,15 @@ def generate_summary(weather_data):
     mean_low = round(calculate_mean(lows), 1)
     mean_high = round(calculate_mean(highs), 1)
 
-    # Adding each line to our results
-    result_list.append(f"{len(weather_data)} Day Overview")
-    result_list.append(f"  The lowest temperature will be {lowest}°C, and will occur on {lowest_day}.")
-    result_list.append(f"  The highest temperature will be {highest}°C, and will occur on {highest_day}.")
-    result_list.append(f"  The average low this week is {mean_low}°C.")
-    result_list.append(f"  The average high this week is {mean_high}°C.")
-    # The test files end with an empty line!
-    result_list.append("")
+    # A list to store our results
+    result_list = [
+        f"{len(weather_data)} Day Overview",
+        f"  The lowest temperature will be {lowest}°C, and will occur on {lowest_day}.",
+        f"  The highest temperature will be {highest}°C, and will occur on {highest_day}.",
+        f"  The average low this week is {mean_low}°C.",
+        f"  The average high this week is {mean_high}°C.",
+        ""
+    ]
 
     # Here we use the string.join() method to concatenate.
     # Each concatenated line is separated by a newline character.
@@ -258,10 +256,14 @@ def generate_daily_summary(weather_data):
     result_list = []
 
     for day in weather_data:
-        result_list.append(f"---- {convert_date(day[0])} ----")
-        result_list.append(f"  Minimum Temperature: {convert_f_to_c(day[1])}°C")
-        result_list.append(f"  Maximum Temperature: {convert_f_to_c(day[2])}°C")
-        result_list.append("")
+        # Using the extend method to add multiple items to the list at once.
+        #   - https://docs.python.org/3/tutorial/datastructures.html#more-on-lists
+        result_list.extend([
+            f"---- {convert_date(day[0])} ----",
+            f"  Minimum Temperature: {convert_f_to_c(day[1])}°C",
+            f"  Maximum Temperature: {convert_f_to_c(day[2])}°C",
+            ""
+        ])
 
     # The test files end with TWO empty lines!
     result_list.append("")
