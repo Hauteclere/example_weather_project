@@ -55,13 +55,11 @@ def calculate_mean(weather_data):
     Returns:
         A float representing the mean value.
     """
-    # We use a list comprehension to convert any non-floats from the input to floats.
-    # There's a short discussion of this in the README, but here are the docs:
-    #   - https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
-    #   - handy examples here: https://www.youtube.com/watch?v=AhSvKGTh28Q 
-    # You could just as easily use a "for" loop if you preferred.
+    data_points = []
 
-    data_points = [float(datapoint) for datapoint in weather_data]
+    # We use a for loop to convert our data points to floats.    
+    for datapoint in weather_data:
+        data_points.append(float(datapoint))
 
     # now we can calculate the average
     return sum(data_points)/len(weather_data)
@@ -206,18 +204,18 @@ def generate_summary(weather_data):
         A string containing the summary information.
     """
 
-    # We will generate a list of lines to store our output. 
+    # We will be doing some conversions here, so we create some lists to store them.
+    dates = []
+    lows = []
+    highs = []
+
+    # We will also generate a list of lines to store our output. 
     result_list = []
 
-    # Three list comprehensions to convert our days and temps
-    # See how we grab the first element of each row for the dates,
-    # the second element of each row for the lows,
-    # and the third element of each row for the highs?
-    # Once again, you could use a "for" loop if you preferred.
-
-    dates = [convert_date(day[0]) for day in weather_data]
-    lows = [convert_f_to_c(day[1]) for day in weather_data]
-    highs = [convert_f_to_c(day[2]) for day in weather_data]
+    for day in weather_data:
+        dates.append(convert_date(day[0]))
+        lows.append(convert_f_to_c(day[1]))
+        highs.append(convert_f_to_c(day[2]))
 
     # Using the functions we built earlier!
     lowest, lowest_index = find_min(lows)
@@ -259,9 +257,6 @@ def generate_daily_summary(weather_data):
     # We use the same list-building process as above
     result_list = []
 
-    # I've chosen NOT to use a list comprehension this time,
-    # because this seems easier to read to me. But you could
-    # use a comprehension here too and get the same result!
     for day in weather_data:
         result_list.append(f"---- {convert_date(day[0])} ----")
         result_list.append(f"  Minimum Temperature: {convert_f_to_c(day[1])}°C")
