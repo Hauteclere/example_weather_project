@@ -1,11 +1,7 @@
-# Example Python Weather Project
+# Example Python Weather Project - Advanced Syntax
 This repo contains an example of one way to solve the Python Weather project for the She Codes Plus Python unit.
 
-Keep in mind that what's set out here is not intended to show the only way to solve this project, or even the recommended way to solve it. If every Python mentor demonstrated their own preferred solution to the project, each one would be different. Python lets us build our own solutions to problems any way we like, and if your project passed all the tests, then you were successful!
-
-Instead, this repo is designed to demonstrate some common Python idioms to you that might serve you well in future projects, and to introduce you to some powerful techniques that you might not have had time to research within the (very tight!) project deadline.
-
-For this reason, don't be discouraged if this example solution looks foreign to you or is hard to understand! Being a programmer is a constant journey of learning new techniques. We have plenty of documentation linked in the comments of this solution, and you are encouraged to approach the mentors or post in the help channels to help you interpret and apply the techniques set out here.
+You're currently looking at the `advanced_syntax` branch of this repo. This is an alternative solution to the project that uses "list comprehensions". 
 
 ## List Comprehensions
 A handy and powerful piece of syntax that you'll see for the first time in this demonstration is a "list comprehension". 
@@ -34,7 +30,7 @@ print(list_of_squares)
 > 
 > ![](./img/four_strings.png)
 
-This works just fine, but it requires a few lines of code. It's such a simple task. If only we could do this in one line!
+This is how we solved it in the `main` branch example. The `for` loop works just fine, but it requires a few lines of code. It's such a simple task. If only we could do this in one line!
 
 ### Using A Comprehension Instead
 The syntax for a list comprehension looks like we squashed a `for` loop into the square brackets of a list. Here's how we would convert the above example to a comprehension:
