@@ -230,10 +230,10 @@ def generate_summary(weather_data):
     # A list to store our results
     result_list = [
         f"{len(weather_data)} Day Overview",
-        f"  The lowest temperature will be {lowest}°C, and will occur on {lowest_day}.",
-        f"  The highest temperature will be {highest}°C, and will occur on {highest_day}.",
-        f"  The average low this week is {mean_low}°C.",
-        f"  The average high this week is {mean_high}°C.",
+        f"  The lowest temperature will be {format_temperature(lowest)}, and will occur on {lowest_day}.",
+        f"  The highest temperature will be {format_temperature(highest)}, and will occur on {highest_day}.",
+        f"  The average low this week is {format_temperature(mean_low)}.",
+        f"  The average high this week is {format_temperature(mean_high)}.",
         ""
     ]
 
@@ -260,8 +260,8 @@ def generate_daily_summary(weather_data):
         #   - https://docs.python.org/3/tutorial/datastructures.html#more-on-lists
         result_list.extend([
             f"---- {convert_date(day[0])} ----",
-            f"  Minimum Temperature: {convert_f_to_c(day[1])}°C",
-            f"  Maximum Temperature: {convert_f_to_c(day[2])}°C",
+            f"  Minimum Temperature: {format_temperature(convert_f_to_c(day[1]))}",
+            f"  Maximum Temperature: {format_temperature(convert_f_to_c(day[2]))}",
             ""
         ])
 
