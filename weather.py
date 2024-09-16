@@ -79,9 +79,6 @@ def load_data_from_csv(csv_file):
     Returns:
         A list of lists, where each sublist is a (non-empty) line in the csv file.
     """
-        
-    data_to_return = []
-
     # It's good practice to make sure that the file gets closed after we are done.
     # Otherwise another function might not be able to access it later.
     
@@ -101,19 +98,10 @@ def load_data_from_csv(csv_file):
 
         header = next(my_reader)
 
-        # Now we can iterate over the rest of the file
-        for row in my_reader:
-
-            # In Python, the empty list "[]" evaluates to False,
-            # and every other list evaluates to True!
-            if row:
-                # If the list is not empty, we convert the numbers to ints, 
-                # and add to our data to return
-
-                # Here I'm doing the conversion, creating a list, and appending 
-                # it, all in one go. You could perform these steps separately 
-                # if you preferred.
-                data_to_return.append([row[0], int(row[1]), int(row[2])])
+        # A list comprehension with a boolean condition!
+        data_to_return = [
+            [row[0], int(row[1]), int(row[2])] for row in my_reader if row
+        ]
 
         return data_to_return
 
